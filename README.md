@@ -2,15 +2,15 @@
 
 This is a ascii based server that is hadled by commands and have a response function for each command
 
-#Compile
+# Compile
 ```sh
 $ g++ -g -Wall AsciiServer.cpp main.cpp -o server
 ```
-#Excecute
+# Excecute
 ```sh
 $ ./server
 ```
 
-#See AsciiServer.h to usage
+# See AsciiServer.h to usage
 
-#GNU License
+# GNU License
