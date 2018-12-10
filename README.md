@@ -3,10 +3,13 @@
 This is a ascii based server that is hadled by commands and have a response function for each command
 
 #Compile
-    g++ -g -Wall AsciiServer.cpp main.cpp -o server
-
+```sh
+$ g++ -g -Wall AsciiServer.cpp main.cpp -o server
+```
 #Excecute
-    ./server
+```sh
+$ ./server
+```
 
 #See AsciiServer.h to usage
 
