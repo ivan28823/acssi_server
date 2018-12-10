@@ -1,3 +1,8 @@
+/**
+ * Author: Ivan Moreno
+ * December 2018
+ * License - https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
 #ifndef ASCIISERVER_H_
 #define ASCIISERVER_H_
 

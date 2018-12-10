@@ -1,3 +1,13 @@
+/**
+ * This is a server based in ascii characters,
+ * to use you have to define the comands and each command
+ * must to have a response funtion
+ * 
+ * Author: Ivan Moreno
+ * December 2018
+ * License - https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
