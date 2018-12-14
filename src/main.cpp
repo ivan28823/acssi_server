@@ -6,6 +6,9 @@
  * Author: Ivan Moreno
  * December 2018
  * License - https://www.gnu.org/licenses/gpl-3.0.en.html
+ * 
+ * This program is sharing multiple variables to multiple clients.
+ * The server run in a process and another process is changing the value of these variable
 */
 
 #include <iostream>
@@ -21,7 +24,6 @@ using namespace std;
 #define PORT_SERVER     8292
 #define NUM_OF_COMANDS  3
 
-struct response_stream *rspn;
 /**
  * Struct from stream server response
 */
@@ -34,19 +36,28 @@ struct response_stream{
   float ppm_no2;
   float ppm_so2;
   float ppm_o3;
-};
+} *rspn;
 /**
  * Pointer to char array that sets the commands that the server will respond
  * the last comand must be the exit comand
+ * the server compare commands by the length, if client send {[CC] options}
+ * the server match with [CC] because is the same initial command, this way support
+ * to add aditional options, the full command that the client have sendend is passed by
+ * buff on response function 
 */
 const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
-char * CCResponse(char *buff){
-  printf("%s\n",buff);
-  return (char *)"OK";
-}
 /**
  * Response functions
+ *
+ * Return the array of char that the server will response
+ * @param buff - is the buffer of 1024 char array,
+ *  in buff the server pass the command that client have sended 
+ *  you can see the command if the client have added additional params
 */
+char * CCResponse(char *buff){
+  buff = (char *)"OK";
+  return buff;
+}
 char * RTSResponse(char *buff){
   sprintf(buff,"R:[%s|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f]",rspn->name,rspn->temp,rspn->pres,rspn->hum,rspn->ppm_co,rspn->ppm_no2,rspn->ppm_so2,rspn->ppm_o3);
   return buff;

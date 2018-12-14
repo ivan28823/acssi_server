@@ -19,10 +19,10 @@ INCLUDES = -I include
 LIBS = 
 
 #remote host copy
-REMOTE_USER = pi
-REMOTE_PASS = 2082
-REMOTE_HOST = 192.168.1.15
-REMOTE_DIR	= ~/Desktop/EMCA/
+REMOTE_USER = you_user
+REMOTE_PASS = yu_pass
+REMOTE_HOST = you_host
+REMOTE_DIR	= /you/path
 
 # code lists #
 # Find all source files in the source directory, sorted by
@@ -53,8 +53,7 @@ clean:
 	@echo "[LOG] Deleting $(BIN_NAME) symlink"
 	@$(RM) $(BIN_NAME)
 	@echo "[LOG] Deleting directories"
-	@$(RM) -r $(BUILD_PATH)
-	@$(RM) -r $(BIN_PATH)
+	@$(RM) -rf $(BUILD_PATH)
 
 # checks the executable and symlinks to the output
 .PHONY: all

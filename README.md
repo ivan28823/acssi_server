@@ -4,11 +4,11 @@ This is a ascii based server that is hadled by commands and have a response func
 
 # Compile
 ```sh
-$ g++ -g -Wall AsciiServer.cpp main.cpp -o server
+$ make
 ```
 # Excecute
 ```sh
-$ ./server
+$ make exe
 ```
 
 # See AsciiServer.h to usage
