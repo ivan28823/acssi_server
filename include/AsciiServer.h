@@ -23,8 +23,6 @@ private:
   struct sockaddr_in serverAddr;    // struct from server addr
   struct sockaddr_in clientAddr;    // struct from client addr
 
-  socklen_t addr_size;  // size
-
   char *(**responseFunct)(char *);   // pointer to response functions
   
   ////// Private functions

@@ -37,9 +37,11 @@ struct response_stream{
 };
 /**
  * Pointer to char array that sets the commands that the server will respond
+ * the last comand must be the exit comand
 */
 const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
 char * CCResponse(char *buff){
+  printf("%s\n",buff);
   return (char *)"OK";
 }
 /**
@@ -49,9 +51,9 @@ char * RTSResponse(char *buff){
   sprintf(buff,"R:[%s|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f]",rspn->name,rspn->temp,rspn->pres,rspn->hum,rspn->ppm_co,rspn->ppm_no2,rspn->ppm_so2,rspn->ppm_o3);
   return buff;
 }
-char * (*ptrFunc[2])(char *buff) = {CCResponse,RTSResponse};
+char * (*ptrFunc[2])(char *) = {CCResponse,RTSResponse};
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) {  
   // for shared memory btw child and parent
   rspn = (response_stream *) mmap(NULL,sizeof(response_stream),PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED,0,0);
 
@@ -59,14 +61,14 @@ int main(int argc, char const *argv[]) {
   server.setFunctions(ptrFunc);
   server.setComands(cmdArr,NUM_OF_COMANDS);
   
-  if(!server.initServer()){
-    printf("Connection cannot be established!!\n");
-    return 0;
-  }
 
   pid_t childPID = fork();
   if(childPID == (pid_t)0){
     /*Child process*/
+    if(server.initServer()){
+      printf("Connection cannot be established!!\n");
+      exit(0);
+    }
     server.startServer();
   }else {
     /*Parent process*/

@@ -22,8 +22,7 @@
  * Function for chean child process from sigaction()
 */
 static void cleanChildProcess(int signal_number){
-  int status;
-  wait (&status);
+  wait (&signal_number);
 }
 
 AsciiServer::AsciiServer(){
@@ -65,21 +64,26 @@ int AsciiServer::initServer(){
   sockFd = socket(AF_INET,SOCK_STREAM,0);
   if(sockFd < 0){
     printf("[-] Error in Connection\n");
-    return 0;
-  }else
-    printf("[+] Server socket is created\n");
+    return 1;
+  }
+#ifdef SERVER_DBG
+  printf("[+] Server socket is created\n");
+#endif //SERVER_DBG
+  
   int opt = 1;
   if (setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,&opt, sizeof(opt))){
-			printf("[-] Error sock option\n");
-			return 0;
+		printf("[-] Error sock option\n");
+		return 2;
 	}
+  
   if(bind(sockFd, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0){
     printf("[-] Error binding\n");
-    return 0;
-  }else
-    printf("[+] Binding port %d\n", port);
-  
-  return 1;
+    return 3;
+  }
+#ifdef SERVER_DBG
+  printf("[+] Binding port %d\n", port);
+#endif //SERVER_DBG
+  return 0;
 }
 void AsciiServer::startServer(){
   struct sigaction sigchld_action;
@@ -87,26 +91,29 @@ void AsciiServer::startServer(){
   sigchld_action.sa_handler = &cleanChildProcess;
   sigaction(SIGCHLD, &sigchld_action, NULL);
 
-  if(listen(sockFd, 10) == 0)
-    printf("[+] Listening....\n");
-  else
+  socklen_t addr_size = sizeof(clientAddr);  // size
+  
+  if(listen(sockFd, 10) < 0){
     printf("[-] Error in binding.\n");
-  for(;;){
-#ifdef SERVER_DBG
-      printf("[+] Waiting for new clients\n");
-#endif // SERVER_DBG
+  }
 
+#ifdef SERVER_DBG
+    printf("[+] Listening....\n");
+#endif //SERVER_DBG
+
+  for(;;){
     clientFd = accept(sockFd,(struct sockaddr *)&clientAddr,&addr_size);
     if(clientFd == -1 ){
-      if (errno == EINTR)
+      if (errno == EINTR){
 	      /* The call was interrupted by a signal.  Try again.  */
-	        continue;
-      else{
-	        /* Something else went wrong.  */
+	      continue;
+      }else{
+	      /* Something else were wrong.  */
         printf("[-] Error in accept\n");
         break;
       }
     }
+    
 #ifdef SERVER_DBG
       printf("[+] Connection accepted from %s:%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
 #endif //SERVER_DBG
@@ -119,6 +126,7 @@ void AsciiServer::startServer(){
         close(clientFd);
         exit (0);
       }else if(chiltPID > 0){
+        /*Parent process*/
         close(clientFd);
       }else{
         printf("[-] Error in fork()\n");
@@ -141,9 +149,9 @@ void AsciiServer::setComands(const char ** ptrArr,int numOfCmd){
   numOfComands = numOfCmd;
 }
 void AsciiServer::handleConnection(){
-  int index;
+  int index,size_buff;
   for(;;){
-    recv(clientFd,buffer,BUFF_SER_LEN,0);
+    size_buff = recv(clientFd,buffer,BUFF_SER_LEN,0);
 
     if(strncmp(buffer,comandsArray[numOfComands - 1],strlen(comandsArray[numOfComands - 1])) == 0){
       break;
@@ -156,6 +164,7 @@ void AsciiServer::handleConnection(){
       }
     if(index >= 0){
       char * auxbuff = new char[1024];
+      strncpy(auxbuff,buffer,size_buff);
       sprintf(buffer,"%s\n",(responseFunct[index])(auxbuff));
       send(clientFd,buffer,strlen(buffer),0);
       delete[] auxbuff;
@@ -163,6 +172,6 @@ void AsciiServer::handleConnection(){
       sprintf(buffer,"[-] Comand not found\n");
       send(clientFd,buffer,strlen(buffer),0);
     }
-  bzero(buffer,BUFF_SER_LEN);
+    bzero(buffer,BUFF_SER_LEN);
   }
 }
