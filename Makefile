@@ -10,7 +10,7 @@ BUILD_PATH = build
 BIN_PATH = $(BUILD_PATH)/bin
 
 # executable # 
-BIN_NAME = server
+BIN_NAME = ascii_server
 
 # flags #
 COMPILE_FLAGS = -Wall -Wextra -g
@@ -19,10 +19,10 @@ INCLUDES = -I include
 LIBS = 
 
 #remote host copy
-REMOTE_USER = you_user
-REMOTE_PASS = yu_pass
-REMOTE_HOST = you_host
-REMOTE_DIR	= /you/path
+REMOTE_USER = ivan
+REMOTE_PASS = ivan20821997
+REMOTE_HOST = 192.168.1.10
+REMOTE_DIR  = /home/ivan/UserFiles/WorkSpace/C_Cpp/AsciiServer/
 
 # code lists #
 # Find all source files in the source directory, sorted by

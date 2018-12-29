@@ -44,7 +44,7 @@ struct response_stream{
  * the server match with [CC] because is the same initial command, this way support
  * to add aditional options, the full command that the client have sendend is passed by
  * buff on response function 
-*/
+ */
 const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
 /**
  * Response functions
@@ -53,7 +53,7 @@ const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
  * @param buff - is the buffer of 1024 char array,
  *  in buff the server pass the command that client have sended 
  *  you can see the command if the client have added additional params
-*/
+ */
 char * CCResponse(char *buff){
   buff = (char *)"OK";
   return buff;

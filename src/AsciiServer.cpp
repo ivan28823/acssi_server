@@ -2,7 +2,7 @@
  * Author: Ivan Moreno
  * December 2018
  * License - https://www.gnu.org/licenses/gpl-3.0.en.html
-*/
+ */
 
 #include "AsciiServer.h"
 
@@ -20,7 +20,7 @@
 
 /**
  * Function for chean child process from sigaction()
-*/
+ */
 static void cleanChildProcess(int signal_number){
   wait (&signal_number);
 }
