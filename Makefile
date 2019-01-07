@@ -22,7 +22,7 @@ LIBS =
 REMOTE_USER = ivan
 REMOTE_PASS = ivan20821997
 REMOTE_HOST = 192.168.1.10
-REMOTE_DIR  = /home/ivan/UserFiles/WorkSpace/C_Cpp/AsciiServer/
+REMOTE_DIR  = ~/UserFiles/WorkSpace/C_Cpp/AsciiServer/
 
 # code lists #
 # Find all source files in the source directory, sorted by
@@ -44,27 +44,27 @@ release: dirs
 
 .PHONY: dirs
 dirs:
-	@echo "[LOG] Creating directories"
+	@echo "[MAKE] Creating directories"
 	@mkdir -p $(dir $(OBJECTS))
 	@mkdir -p $(BIN_PATH)
 
 .PHONY: clean
 clean:
-	@echo "[LOG] Deleting $(BIN_NAME) symlink"
+	@echo "[MAKE] Deleting $(BIN_NAME) symlink"
 	@$(RM) $(BIN_NAME)
-	@echo "[LOG] Deleting directories"
+	@echo "[MAKE] Deleting directories"
 	@$(RM) -rf $(BUILD_PATH)
 
 # checks the executable and symlinks to the output
 .PHONY: all
-all: dirs $(BIN_PATH)/$(BIN_NAME)
-	@echo "[LOG] Making symlink: $(BIN_NAME) -> $<"
+all: $(BIN_PATH)/$(BIN_NAME)
+	@echo "[MAKE] Making symlink: $(BIN_NAME) -> $(BIN_PATH)/$(BIN_NAME)"
 	@$(RM) $(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
 # Creation of the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	@echo "[LOG] Linking: $@"
+	@echo "[MAKE] Linking: $@"
 	@$(CXX) $(OBJECTS) $(LIBS) -o $@
 
 # Add dependency files, if they exist
@@ -74,17 +74,17 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 # After the first compilation they will be joined with the rules from the
 # dependency files to provide header dependencies
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
-	@echo "[LOG] Compiling: $< -> $@"
+	@echo "[MAKE] Compiling: $< -> $@"
 	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 install:	$(BIN_PATH)/$(BIN_NAME)
-	@echo "[LOG] Installing on /usr/bin/$(BIN_NAME)"
+	@echo "[MAKE] Installing on /usr/bin/$(BIN_NAME)"
 	@sudo cp $(BIN_PATH)/$(BIN_NAME) /usr/bin/
 
 remote_copy:	
-	@echo "[LOG] Copying project to remote host: $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)"
+	@echo "[MAKE] Copying project to remote host: $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)"
 	@sshpass -p "$(REMOTE_PASS)" scp -r * $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
 
 exe: all
-	@echo "[LOG] Running $(BIN_NAME)"
+	@echo "[MAKE] Running $(BIN_NAME)"
 	@./$(BIN_NAME)

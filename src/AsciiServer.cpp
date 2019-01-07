@@ -153,24 +153,30 @@ void AsciiServer::handleConnection(){
   for(;;){
     size_buff = recv(clientFd,buffer,BUFF_SER_LEN,0);
 
-    if(strncmp(buffer,comandsArray[numOfComands - 1],strlen(comandsArray[numOfComands - 1])) == 0){
-      break;
-    }
     index = -1;
-    for(int i = 0; i < numOfComands - 1;i++)
-      if(strncmp(buffer,comandsArray[i],strlen(comandsArray[i])) == 0){
+
+    for (int i = 0; i < numOfComands ;i++)
+      if (strncmp(buffer,comandsArray[i],strlen(comandsArray[i])) == 0) {
         index = i;
         break;
       }
-    if(index >= 0){
+
+    if (index == numOfComands - 1) {
+      break;
+    } else if (index >= 0) {
       char * auxbuff = new char[1024];
       strncpy(auxbuff,buffer,size_buff);
-      sprintf(buffer,"%s\n",(responseFunct[index])(auxbuff));
+      *(auxbuff + size_buff) = NULL; 
+      sprintf(buffer,"%s\n",(responseFunct[index + 1])(auxbuff));
       send(clientFd,buffer,strlen(buffer),0);
-      delete[] auxbuff;
-    }else{
-      sprintf(buffer,"[-] Comand not found\n");
+      delete []auxbuff;
+    } else {
+      char *auxUnknow = new char[1024];
+      strncpy(auxUnknow,buffer,size_buff);
+      *(auxUnknow + size_buff ) = NULL;
+      sprintf(buffer,"%s\n",(responseFunct[0])(auxUnknow));
       send(clientFd,buffer,strlen(buffer),0);
+      delete []auxUnknow;
     }
     bzero(buffer,BUFF_SER_LEN);
   }

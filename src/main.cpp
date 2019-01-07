@@ -9,8 +9,7 @@
  * 
  * This program is sharing multiple variables to multiple clients.
  * The server run in a process and another process is changing the value of these variable
-*/
-
+ */
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +25,7 @@ using namespace std;
 
 /**
  * Struct from stream server response
-*/
+ */
 struct response_stream{
   char* name;
   float temp;
@@ -43,7 +42,7 @@ struct response_stream{
  * the server compare commands by the length, if client send {[CC] options}
  * the server match with [CC] because is the same initial command, this way support
  * to add aditional options, the full command that the client have sendend is passed by
- * buff on response function 
+ * buff on response function
  */
 const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
 /**
@@ -53,7 +52,12 @@ const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
  * @param buff - is the buffer of 1024 char array,
  *  in buff the server pass the command that client have sended 
  *  you can see the command if the client have added additional params
+ *  The first function must be the unknow command function
  */
+char * UnknowComand(char *buff) {
+  sprintf(buff,"Unknow Command, try again");
+  return buff;
+}
 char * CCResponse(char *buff){
   buff = (char *)"OK";
   return buff;
@@ -62,7 +66,7 @@ char * RTSResponse(char *buff){
   sprintf(buff,"R:[%s|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f]",rspn->name,rspn->temp,rspn->pres,rspn->hum,rspn->ppm_co,rspn->ppm_no2,rspn->ppm_so2,rspn->ppm_o3);
   return buff;
 }
-char * (*ptrFunc[2])(char *) = {CCResponse,RTSResponse};
+char * (*ptrFunc[3])(char *) = {UnknowComand,CCResponse,RTSResponse};
 
 int main(int argc, char const *argv[]) {  
   // for shared memory btw child and parent
