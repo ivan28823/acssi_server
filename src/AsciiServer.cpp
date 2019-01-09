@@ -19,7 +19,7 @@
 #include <errno.h>
 
 /**
- * Function for chean child process from sigaction()
+ * Function for clean child process from sigaction()
  */
 static void cleanChildProcess(int signal_number){
   wait (&signal_number);
@@ -148,6 +148,11 @@ void AsciiServer::setComands(const char ** ptrArr,int numOfCmd){
   comandsArray = (char **)ptrArr;
   numOfComands = numOfCmd;
 }
+void AsciiServer::setComands(const char ** ptrArr){
+  comandsArray = (char **)ptrArr;
+  numOfComands = 0;
+  for (char ** aux = (char **)ptrArr; *aux; aux++, numOfComands++);
+}
 void AsciiServer::handleConnection(){
   int index,size_buff;
   for(;;){
@@ -166,14 +171,14 @@ void AsciiServer::handleConnection(){
     } else if (index >= 0) {
       char * auxbuff = new char[1024];
       strncpy(auxbuff,buffer,size_buff);
-      *(auxbuff + size_buff) = NULL; 
+      //*(auxbuff + size_buff) = NULL; 
       sprintf(buffer,"%s\n",(responseFunct[index + 1])(auxbuff));
       send(clientFd,buffer,strlen(buffer),0);
       delete []auxbuff;
     } else {
       char *auxUnknow = new char[1024];
       strncpy(auxUnknow,buffer,size_buff);
-      *(auxUnknow + size_buff ) = NULL;
+      //*(auxUnknow + size_buff ) = NULL;
       sprintf(buffer,"%s\n",(responseFunct[0])(auxUnknow));
       send(clientFd,buffer,strlen(buffer),0);
       delete []auxUnknow;

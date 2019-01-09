@@ -24,11 +24,11 @@ private:
 
   /**
    * Pointer to char array that sets the commands that the server will respond
-   * the last comand must be the exit comand
-   * the server compare commands by the length, if client send {[CC] options}
-   * the server match with [CC] because is the same initial command, this way support
-   * to add aditional options, the full command that the client have sendend is passed by
-   * buffer on response function, the number of commands have to be sets in numOfComands
+   * the last comand must be the exit comand the server compare commands by the
+   * length, if client send {[CC] options} the server match with [CC] because 
+   * is the same initial command, this way support to add aditional options, 
+   * the full command that the client have sendend is passed by buffer on response
+   * function, the number of commands have to be sets in numOfComands
    */
   char **comandsArray;
 
@@ -37,8 +37,9 @@ private:
    *
    * Return the array of char that the server will response
    * @param {char *} - is the buffer of 1024 char array,
-   *  in the buffer the server pass the command that client have sended 
-   *  you can see the command if the client have added additional params
+   * in the buffer the server pass the command that client have sended 
+   * you can see the command if the client have added additional params
+   * The first function must be the Unknow command Function
    */
   char *(**responseFunct)(char *);
   
@@ -96,6 +97,12 @@ public:
    * @param numOfCmd - number of comands
    */
   void setComands(const char ** ptrArr,int numOfCmd);
+  /**
+   * Set the pointer to comand list, after end command 
+   * need to put a null command or 0 pointer
+   * @param ptrArr - pinter to array of comands
+   */
+  void setComands(const char ** ptrArr);
 };
 
 #endif

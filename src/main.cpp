@@ -17,64 +17,23 @@
 #include <string.h>
 #include <unistd.h>
 #include "AsciiServer.h"
+#include "serverModel.h"
 
 using namespace std;
 
 #define PORT_SERVER     8292
-#define NUM_OF_COMANDS  3
 
-/**
- * Struct from stream server response
- */
-struct response_stream{
-  char* name;
-  float temp;
-  float pres;
-  float hum;
-  float ppm_co;
-  float ppm_no2;
-  float ppm_so2;
-  float ppm_o3;
-} *rspn;
-/**
- * Pointer to char array that sets the commands that the server will respond
- * the last comand must be the exit comand
- * the server compare commands by the length, if client send {[CC] options}
- * the server match with [CC] because is the same initial command, this way support
- * to add aditional options, the full command that the client have sendend is passed by
- * buff on response function
- */
-const char *cmdArr[] = {"[CC]","[RTS]","[END]"};
-/**
- * Response functions
- *
- * Return the array of char that the server will response
- * @param buff - is the buffer of 1024 char array,
- *  in buff the server pass the command that client have sended 
- *  you can see the command if the client have added additional params
- *  The first function must be the unknow command function
- */
-char * UnknowComand(char *buff) {
-  sprintf(buff,"Unknow Command, try again");
-  return buff;
-}
-char * CCResponse(char *buff){
-  buff = (char *)"OK";
-  return buff;
-}
-char * RTSResponse(char *buff){
-  sprintf(buff,"R:[%s|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f|%.4f]",rspn->name,rspn->temp,rspn->pres,rspn->hum,rspn->ppm_co,rspn->ppm_no2,rspn->ppm_so2,rspn->ppm_o3);
-  return buff;
-}
-char * (*ptrFunc[3])(char *) = {UnknowComand,CCResponse,RTSResponse};
+struct response_stream *rspn;
 
-int main(int argc, char const *argv[]) {  
+int main(void) {  
   // for shared memory btw child and parent
   rspn = (response_stream *) mmap(NULL,sizeof(response_stream),PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED,0,0);
 
+  char * (*ptrFunc[3])(char *) = {UnknowComand,CCResponse,RTSResponse};
+
   AsciiServer server(PORT_SERVER);
   server.setFunctions(ptrFunc);
-  server.setComands(cmdArr,NUM_OF_COMANDS);
+  server.setComands(cmdArr);
   
 
   pid_t childPID = fork();
@@ -88,15 +47,16 @@ int main(int argc, char const *argv[]) {
   }else {
     /*Parent process*/
     printf("Init Child process pid = %d\n",(int)childPID);
+    rspn->name = (char *)"TST";
+
     for(;;){
-      rspn->name = (char *)"TST";
-      rspn->temp = (float)(rand()%10);
-      rspn->pres = (float)(rand()%10);
-      rspn->hum = (float)(rand()%10);
-      rspn->ppm_co = (float)(rand()%10);
+      rspn->temp    = (float)(rand()%10);
+      rspn->pres    = (float)(rand()%10);
+      rspn->hum     = (float)(rand()%10);
+      rspn->ppm_co  = (float)(rand()%10);
       rspn->ppm_no2 = (float)(rand()%10);
       rspn->ppm_so2 = (float)(rand()%10);
-      rspn->ppm_o3 =  (float)(rand()%10);
+      rspn->ppm_o3  =  (float)(rand()%10);
       sleep(1);
     }
   }
