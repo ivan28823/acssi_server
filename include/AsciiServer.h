@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 
 #define BUFF_SER_LEN 1024
-#define SERVER_DBG
+//#define SERVER_DBG
 
 class AsciiServer{
 private:
@@ -24,11 +24,12 @@ private:
 
   /**
    * Pointer to char array that sets the commands that the server will respond
-   * the last comand must be the exit comand the server compare commands by the
-   * length, if client send {[CC] options} the server match with [CC] because 
-   * is the same initial command, this way support to add aditional options, 
-   * the full command that the client have sendend is passed by buffer on response
-   * function, the number of commands have to be sets in numOfComands
+   * the last comand must be the exit comand
+   * the server compare commands by the length, if client send {[CC] options}
+   * the server match with [CC] because is the same initial command, this way support
+   * to add aditional options, the full command that the client have sendend is passed by
+   * buff on response function, after the end command, you have to  put in the other line 
+   * a null or 0, indicate a null pointer
    */
   char **comandsArray;
 
@@ -36,10 +37,10 @@ private:
    * Response functions
    *
    * Return the array of char that the server will response
-   * @param {char *} - is the buffer of 1024 char array,
-   * in the buffer the server pass the command that client have sended 
-   * you can see the command if the client have added additional params
-   * The first function must be the Unknow command Function
+   * @param buff - is the buffer of 1024 char array,
+   *  in buff the server pass the command that client have sended 
+   *  you can see the command if the client have added additional params
+   *  The first function must be the Unknown Command function
    */
   char *(**responseFunct)(char *);
   

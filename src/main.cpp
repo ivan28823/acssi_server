@@ -29,7 +29,7 @@ int main(void) {
   // for shared memory btw child and parent
   rspn = (response_stream *) mmap(NULL,sizeof(response_stream),PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED,0,0);
 
-  char * (*ptrFunc[3])(char *) = {UnknowComand,CCResponse,RTSResponse};
+  char * (*ptrFunc[3])(char *) = {unknownCommand,CCResponse,RTSResponse};
 
   AsciiServer server(PORT_SERVER);
   server.setFunctions(ptrFunc);

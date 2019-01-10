@@ -33,9 +33,9 @@ static const char *cmdArr[] = {"[CC]","[RTS]","[END]",0};
  * @param buff - is the buffer of 1024 char array,
  *  in buff the server pass the command that client have sended 
  *  you can see the command if the client have added additional params
- *  The first function must be the unknow command function
+ *  The first function must be the Unknown Command function
  */
-char * UnknowComand(char *buff);
+char * unknownCommand(char *buff);
 char * CCResponse(char *buff);
 char * RTSResponse(char *buff);
 

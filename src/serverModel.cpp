@@ -2,8 +2,8 @@
 #include <stdio.h>
 
 
-char * UnknowComand(char *buff) {
-  sprintf(buff,"Unknow Command, try again");
+char * unknownCommand(char *buff) {
+  sprintf(buff,"Unknown Command, try again");
   return buff;
 }
 char * CCResponse(char *buff){
