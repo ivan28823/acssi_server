@@ -20,7 +20,6 @@ LIBS =
 
 #remote host copy
 REMOTE_USER = ivan
-REMOTE_PASS = ivan20821997
 REMOTE_HOST = 192.168.1.10
 REMOTE_DIR  = ~/UserFiles/WorkSpace/C_Cpp/AsciiServer/
 
@@ -83,7 +82,7 @@ install:	$(BIN_PATH)/$(BIN_NAME)
 
 remote_copy:	
 	@echo "[MAKE] Copying project to remote host: $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)"
-	@sshpass -p "$(REMOTE_PASS)" scp -r * $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
+	@scp -r * $(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
 
 exe: all
 	@echo "[MAKE] Running $(BIN_NAME)"
